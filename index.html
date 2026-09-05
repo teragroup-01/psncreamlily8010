@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AR Roller Coaster Hiro</title>
+
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ar-js-org/ar.js@3.4.5/aframe/build/aframe-ar-nft.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.5/aframe/build/aframe-ar.js"></script>
+
+<style>
+body{margin:0;overflow:hidden;}
+#control{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+z-index:999;
+}
+button{
+font-size:18px;
+padding:12px 16px;
+margin:5px;
+border-radius:10px;
+border:0;
+}
+</style>
+</head>
+
+<body>
+
+<div id="control">
+<button onclick="speedUp()">เพิ่มความเร็ว</button>
+<button onclick="speedDown()">ลดความเร็ว</button>
+<button onclick="stopTrain()">หยุด</button>
+</div>
+
+<a-scene
+embedded
+arjs="sourceType:webcam; debugUIEnabled:false;">
+
+<a-marker preset="hiro">
+
+<!-- รางรถไฟเหาะ -->
+<a-torus
+position="0 0.15 0"
+rotation="90 0 0"
+radius="1"
+radius-tubular="0.04"
+color="#222">
+</a-torus>
+
+<!-- เสา -->
+<a-cylinder position="0 0 0"
+radius="0.12"
+height="0.5"
+color="#777">
+</a-cylinder>
+
+<!-- รถไฟเหาะ -->
+<a-box id="train"
+position="0 0.35 1"
+width="0.25"
+height="0.15"
+depth="0.45"
+color="red">
+</a-box>
+
+<a-box position="0.3 0.35 0.9"
+width="0.25"
+height="0.15"
+depth="0.45"
+color="blue">
+</a-box>
+
+</a-marker>
+
+<a-camera></a-camera>
+</a-scene>
+
+
+<script>
+let speed=0.03;
+let running=true;
+let angle=0;
+
+function speedUp(){
+ speed+=0.01;
+ if(speed>0.15) speed=0.15;
+}
+
+function speedDown(){
+ speed-=0.01;
+ if(speed<0) speed=0;
+}
+
+function stopTrain(){
+ running=!running;
+}
+
+function animate(){
+ if(running){
+  angle+=speed;
+  let x=Math.sin(angle)*1;
+  let z=Math.cos(angle)*1;
+  let train=document.querySelector("#train");
+  if(train){
+   train.setAttribute("position",
+   x+" 0.35 "+z);
+  }
+ }
+ requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>
